@@ -245,30 +245,50 @@ function uploadImage(imageData, fileName){
   botTyping();
 }
 
-// ================= BOT TYPING =================
-function botTyping(){
+// ================= BOT TYPING (REAL API) =================
+async function botTyping(){
   const botMsg = document.createElement("div");
   botMsg.className = "message bot";
 
   const botContent = document.createElement("div");
   botContent.className = "msg-content";
-  botContent.innerHTML = "<span class='dots'>? ? ?</span>";
+  botContent.innerHTML = "<span class='dots'>. . .</span>";
 
   botMsg.appendChild(botContent);
   chat.appendChild(botMsg);
 
   scrollBottom();
 
-  setTimeout(()=>{
-    const reply = getReply();
+  try {
+    let currentChat = chats.find(c => c.id === currentChatId);
+    if (!currentChat) return;
+
+    // Get last message as prompt
+    const prompt = currentChat.messages[currentChat.messages.length - 1].text;
+    // History (excluding the very last message we just sent as prompt)
+    const history = currentChat.messages.slice(0, -1);
+
+    const res = await window.apiRequest('/gemini/chat', {
+      method: 'POST',
+      body: JSON.stringify({ prompt, history })
+    });
+
+    const data = await res.json();
+
+    if (!res.ok || !data.success) {
+      throw new Error(data.message || 'AI error');
+    }
+
+    const reply = data.text;
     typeEffect(botContent, reply);
     
-    let currentChat = chats.find(c => c.id === currentChatId);
-    if(currentChat){
-      currentChat.messages.push({ role: "bot", text: reply });
-      localStorage.setItem("geminiChats", JSON.stringify(chats));
-    }
-  },1000);
+    currentChat.messages.push({ role: "bot", text: reply });
+    localStorage.setItem("geminiChats", JSON.stringify(chats));
+
+  } catch (error) {
+    botContent.innerHTML = "<span style='color: #ef4444;'>❌ Error: " + error.message + "</span>";
+    console.error('Gemini API Error:', error);
+  }
 }
 
 // ================= TYPE EFFECT =================
@@ -292,21 +312,6 @@ function scrollBottom(){
   chat.scrollTop = chat.scrollHeight;
 }
 
-// ================= FAKE AI REPLY =================
-function getReply(){
-  const replies = [
-    "Hello! ?? How can I assist you today?",
-    "That's interesting ?? Tell me more.",
-    "I can help you with coding, UI, or projects ??",
-    "Great question! Here's what I think...",
-    "Try building projects like CMS or AI chat ??",
-    "You are doing great, keep going ??",
-    "Want me to improve your UI? ??",
-    "Let's build something amazing together ??"
-  ];
-  return replies[Math.floor(Math.random() * replies.length)];
-}
-
 // ================= CREATE NEW CHAT =================
 function createNewChat(){
   const chatId = "chat_" + Date.now();
@@ -325,7 +330,9 @@ function createNewChat(){
   
   displayChatHistory();
   clearChatUI();
-  sidebar.classList.remove("active");
+  if(sidebar){
+    sidebar.classList.remove("active");
+  }
 }
 
 // ================= LOAD CHAT =================

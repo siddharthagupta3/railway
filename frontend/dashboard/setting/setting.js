@@ -211,6 +211,20 @@ function saveRole(role) {
 
 // ---------- Profile Image Section ----------
 function loadProfileMeta(form) {
+  // Try to load real API data from auth guard first
+  const currentUserRaw = localStorage.getItem('currentUser');
+  if (currentUserRaw) {
+    try {
+      const user = JSON.parse(currentUserRaw);
+      form.elements.fullName.value = user.fullName || `${user.firstName} ${user.lastName}` || '';
+      form.elements.email.value = user.email || '';
+      form.elements.phone.value = user.phone || '';
+      form.elements.organization.value = user.organization || '';
+      return;
+    } catch (err) {}
+  }
+
+  // Fallback to old local storage
   const raw = localStorage.getItem(PROFILE_META_KEY);
   if (!raw) return;
 
@@ -308,6 +322,18 @@ function initSettingsPage() {
   initProfileForm();
   initRoleButtons();
   initDataActions();
+
+  // Logout button
+  const logoutBtn = byId('logoutBtn');
+  if (logoutBtn) {
+    logoutBtn.addEventListener('click', () => {
+      if (confirm('Are you sure you want to logout?')) {
+        if (typeof window.authLogout === 'function') {
+          window.authLogout();
+        }
+      }
+    });
+  }
 }
 
 document.addEventListener('DOMContentLoaded', initSettingsPage);

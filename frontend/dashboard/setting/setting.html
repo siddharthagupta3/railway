@@ -10,6 +10,8 @@
   <title>Settings | finaDash</title>
   <link rel="stylesheet" href="../dash.css">
   <link rel="stylesheet" href="setting.css">
+  <!-- 🔒 AUTH GUARD -->
+  <script src="../../signup/auth-guard.js"></script>
 </head>
 
 <body>
@@ -95,6 +97,17 @@
           <div><span>Income Entries</span><strong id="statIncome">0</strong></div>
           <div><span>Expense Entries</span><strong id="statExpense">0</strong></div>
           <div><span>Current Role</span><strong id="statRole">viewer</strong></div>
+        </div>
+      </article>
+
+      <!-- Account Card -->
+      <article class="card" style="border: 1px solid rgba(239, 68, 68, 0.3);">
+        <h3 style="color: #ef4444;">Account Management</h3>
+        <p class="muted">Manage your active session.</p>
+        <div class="stack-actions" style="margin-top: 15px;">
+          <button id="logoutBtn" type="button" class="btn danger" style="width: 100%; display: flex; justify-content: center; align-items: center; gap: 8px;">
+            <i class="fa-solid fa-right-from-bracket"></i> Logout Current Session
+          </button>
         </div>
       </article>
     </section>

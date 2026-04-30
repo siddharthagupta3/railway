@@ -183,6 +183,43 @@
                 </div>
             </div>
         </div>
+
+        <!-- Right Panel - OTP Verification (Hidden initially) -->
+        <div class="panel otp-panel" id="otpPanel" style="display: none;">
+            <div class="panel-content">
+                <div class="logo">
+                    <i class="fas fa-shield-alt"></i>
+                    <h2>Verification</h2>
+                </div>
+                
+                <h3>Verify Your Email</h3>
+                <p>We've sent a 6-digit code to <br><strong id="otpEmailDisplay" style="color: #4ade80;">your email</strong></p>
+                
+                <form class="auth-form" id="otpForm">
+                    <div class="form-group" style="text-align: center; margin: 30px 0;">
+                        <div class="otp-inputs" style="display: flex; gap: 10px; justify-content: center;">
+                            <input type="text" class="otp-digit" maxlength="1" style="width: 45px; height: 50px; text-align: center; font-size: 24px; font-weight: bold; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); background: rgba(0,0,0,0.2); color: white;" required>
+                            <input type="text" class="otp-digit" maxlength="1" style="width: 45px; height: 50px; text-align: center; font-size: 24px; font-weight: bold; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); background: rgba(0,0,0,0.2); color: white;" required>
+                            <input type="text" class="otp-digit" maxlength="1" style="width: 45px; height: 50px; text-align: center; font-size: 24px; font-weight: bold; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); background: rgba(0,0,0,0.2); color: white;" required>
+                            <input type="text" class="otp-digit" maxlength="1" style="width: 45px; height: 50px; text-align: center; font-size: 24px; font-weight: bold; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); background: rgba(0,0,0,0.2); color: white;" required>
+                            <input type="text" class="otp-digit" maxlength="1" style="width: 45px; height: 50px; text-align: center; font-size: 24px; font-weight: bold; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); background: rgba(0,0,0,0.2); color: white;" required>
+                            <input type="text" class="otp-digit" maxlength="1" style="width: 45px; height: 50px; text-align: center; font-size: 24px; font-weight: bold; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); background: rgba(0,0,0,0.2); color: white;" required>
+                        </div>
+                    </div>
+                    
+                    <button type="submit" class="auth-btn">
+                        <span>Verify & Proceed</span>
+                        <i class="fas fa-check"></i>
+                    </button>
+                    
+                </form>
+                
+                <div class="panel-footer" style="margin-top: 20px;">
+                    <p>Didn't receive the code? <br><a href="#" id="resendOtpBtn">Resend Code</a></p>
+                    <p style="margin-top: 15px;"><a href="#" id="backToRegisterBtn" style="color: #9ca3af;"><i class="fas fa-arrow-left"></i> Back to Register</a></p>
+                </div>
+            </div>
+        </div>
     </div>
 
     <!-- Feedback Overlay -->

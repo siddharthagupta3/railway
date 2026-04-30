@@ -42,15 +42,8 @@ const app = {
 };
 
 function initDashboard() {
-    app.init();
-    setupEventListeners();
     setupNavigation();
-    setupEmailForm();
     setupProfileOverview();
-    updateDashboard();
-    renderTransactions();
-    initCharts();
-    applyRoleUI(app.user);
 
     const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     if (prefersReducedMotion) {
@@ -58,18 +51,15 @@ function initDashboard() {
     } else {
         startGridAnimation();
     }
+
+    // Railway Asset Tracking
+    initRailwaySystem();
 }
 
 document.addEventListener('DOMContentLoaded', initDashboard);
 
-// Global Functions for HTML onclick handlers
-window.switchRole = switchRole;
+// Global Functions
 window.toggleMenu = toggleMenu;
-window.showAddTransactionForm = showAddTransactionForm;
-window.hideAddTransactionForm = hideAddTransactionForm;
-window.editTransaction = editTransaction;
-window.deleteTransaction = deleteTransaction;
-window.exportToCSV = exportToCSV;
 
 // UI Rendering
 function applyRoleUI(role) {
@@ -373,6 +363,18 @@ function setupNavigation() {
     window.addEventListener('resize', () => {
         if (window.innerWidth > 768) closeMenu();
     });
+
+    // Logout handling
+    const navLogoutBtn = byId('navLogoutBtn');
+    const mobileLogoutBtn = byId('mobileLogoutBtn');
+    const handleLogoutClick = (e) => {
+        e.preventDefault();
+        if (typeof window.authLogout === 'function') {
+            window.authLogout();
+        }
+    };
+    if (navLogoutBtn) navLogoutBtn.addEventListener('click', handleLogoutClick);
+    if (mobileLogoutBtn) mobileLogoutBtn.addEventListener('click', handleLogoutClick);
 }
 
 function setupEmailForm() {
@@ -442,33 +444,7 @@ function setupProfileOverview() {
 }
 
 function setupEventListeners() {
-    qsa('.role-btn').forEach((btn) => {
-        btn.addEventListener('click', () => switchRole(btn.dataset.role));
-    });
-
-    const transactionForm = byId('transactionForm');
-    if (transactionForm) {
-        transactionForm.addEventListener('submit', handleTransactionSubmit);
-    }
-
-    const addBtn = byId('addTransactionBtn');
-    if (addBtn) addBtn.addEventListener('click', showAddTransactionForm);
-
-    const cancelBtn = byId('cancelTransaction');
-    if (cancelBtn) cancelBtn.addEventListener('click', hideAddTransactionForm);
-
-    const searchInput = byId('searchTransaction');
-    const filterSelect = byId('filterType');
-    const sortSelect = byId('sortBy');
-    if (searchInput) searchInput.addEventListener('input', renderTransactions);
-    if (filterSelect) filterSelect.addEventListener('change', renderTransactions);
-    if (sortSelect) sortSelect.addEventListener('change', renderTransactions);
-
-    const exportBtn = byId('exportBtn');
-    if (exportBtn) exportBtn.addEventListener('click', exportToCSV);
-
-    const saveBtn = byId('saveBtn');
-    if (saveBtn) saveBtn.addEventListener('click', saveDashboard);
+    // Kept for potential future use — all finance UI removed
 }
 
 // Business Logic
@@ -861,4 +837,308 @@ function startGridAnimation() {
     }
 
     runAnimationCycle();
+}
+
+/* =========================================================================
+   RAILWAY ASSET TRACKING SYSTEM - JavaScript
+   Problem ID: 25021
+   ========================================================================= */
+
+const RAILWAY_ASSETS = [
+    {
+        id: 'RC-2024-001',
+        name: 'Rail Clip',
+        type: 'Rail Clip',
+        mfgDate: '2022-03-15',
+        installDate: '2022-06-10',
+        status: 'Active',
+        zone: 'Zone A',
+        trackSection: 'Track 14B – Mumbai-Pune Corridor',
+        inspections: [
+            { note: 'Routine check – no issues found', date: '2024-11-20' },
+            { note: 'Torque verified, aligned correctly', date: '2024-08-05' },
+            { note: 'Initial installation inspection passed', date: '2022-06-10' }
+        ]
+    },
+    {
+        id: 'RL-2023-047',
+        name: 'Rubber Liner',
+        type: 'Liner',
+        mfgDate: '2021-07-22',
+        installDate: '2021-09-14',
+        status: 'Damaged',
+        zone: 'Zone C',
+        trackSection: 'Track 07 – Delhi-Agra Express',
+        inspections: [
+            { note: 'Surface crack detected – flagged for replacement', date: '2024-12-01' },
+            { note: 'Minor wear observed', date: '2024-06-18' },
+            { note: 'Passed initial quality check', date: '2021-09-14' }
+        ]
+    },
+    {
+        id: 'EP-2024-112',
+        name: 'Elastic Pad',
+        type: 'Pad',
+        mfgDate: '2023-01-08',
+        installDate: '2023-04-22',
+        status: 'Active',
+        zone: 'Zone B',
+        trackSection: 'Track 22A – Chennai Metro Line 1',
+        inspections: [
+            { note: 'Elasticity within acceptable range', date: '2025-01-10' },
+            { note: 'Compression test passed', date: '2024-07-30' },
+            { note: 'Installed and baseline recorded', date: '2023-04-22' }
+        ]
+    },
+    {
+        id: 'RC-2021-085',
+        name: 'Rail Clip (Heavy Duty)',
+        type: 'Rail Clip',
+        mfgDate: '2020-11-03',
+        installDate: '2021-02-17',
+        status: 'Replaced',
+        zone: 'Zone D',
+        trackSection: 'Track 03 – Kolkata Suburban South',
+        inspections: [
+            { note: 'Replaced due to fatigue fracture', date: '2024-10-30' },
+            { note: 'Stress fracture first detected', date: '2024-08-22' },
+            { note: 'Maintenance check – all clear', date: '2023-03-11' }
+        ]
+    },
+    {
+        id: 'RL-2023-200',
+        name: 'HDPE Liner',
+        type: 'Liner',
+        mfgDate: '2022-08-30',
+        installDate: '2022-12-01',
+        status: 'Active',
+        zone: 'Zone A',
+        trackSection: 'Track 09 – Bangalore-Mysore High Speed',
+        inspections: [
+            { note: 'Thickness measurement within spec', date: '2025-01-05' },
+            { note: 'No deformation under load test', date: '2024-05-14' },
+            { note: 'Post-install check passed', date: '2022-12-01' }
+        ]
+    },
+    {
+        id: 'EP-2022-056',
+        name: 'EVA Foam Pad',
+        type: 'Pad',
+        mfgDate: '2021-04-19',
+        installDate: '2021-07-30',
+        status: 'Damaged',
+        zone: 'Zone F',
+        trackSection: 'Track 31B – Hyderabad MMTS',
+        inspections: [
+            { note: 'Delamination observed – scheduled for replacement', date: '2024-11-15' },
+            { note: 'Slight moisture ingress detected', date: '2024-02-09' },
+            { note: 'Installed and quality checked', date: '2021-07-30' }
+        ]
+    }
+];
+
+let railwayFilteredAssets = [...RAILWAY_ASSETS];
+
+function initRailwaySystem() {
+    renderAssets(RAILWAY_ASSETS);
+    setupRailwaySearch();
+    setupQRModal();
+    setupHeroScanBtn();
+}
+
+function renderAssets(assets) {
+    const grid = document.getElementById('assetGrid');
+    if (!grid) return;
+
+    if (assets.length === 0) {
+        grid.innerHTML = `
+            <div style="grid-column: 1/-1; text-align:center; padding: 60px 20px; color: rgba(255,255,255,0.5);">
+                <i class="fa-solid fa-magnifying-glass" style="font-size:3rem; margin-bottom:16px; display:block;"></i>
+                <p style="font-size:1.2rem;">No assets match your search</p>
+            </div>`;
+        return;
+    }
+
+    grid.innerHTML = assets.map(asset => {
+        const statusClass = `status-${asset.status.toLowerCase()}`;
+        return `
+        <div class="asset-card ${statusClass}" id="asset-${asset.id.replace(/[^a-z0-9]/gi, '-')}">
+            <div class="asset-header">
+                <div class="asset-title">
+                    <h3>${getComponentIcon(asset.type)} ${asset.name}</h3>
+                    <span class="asset-id">#${asset.id}</span>
+                </div>
+                <span class="status-badge">${asset.status}</span>
+            </div>
+
+            <div class="asset-details">
+                <div class="detail-row">
+                    <i class="fa-solid fa-industry"></i>
+                    <span><strong>Mfg Date:</strong> ${formatDate(asset.mfgDate)}</span>
+                </div>
+                <div class="detail-row">
+                    <i class="fa-solid fa-screwdriver-wrench"></i>
+                    <span><strong>Install Date:</strong> ${formatDate(asset.installDate)}</span>
+                </div>
+                <div class="detail-row">
+                    <i class="fa-solid fa-location-dot"></i>
+                    <span><strong>Zone:</strong> ${asset.zone}</span>
+                </div>
+                <div class="detail-row">
+                    <i class="fa-solid fa-train"></i>
+                    <span>${asset.trackSection}</span>
+                </div>
+            </div>
+
+            <div class="asset-history">
+                <p class="history-title">
+                    <i class="fa-solid fa-clock-rotate-left"></i> Inspection Log
+                </p>
+                <ul class="history-list">
+                    ${asset.inspections.slice(0, 3).map(log => `
+                        <li class="history-item">
+                            ${log.note}
+                            <span class="history-date">${formatDate(log.date)}</span>
+                        </li>
+                    `).join('')}
+                </ul>
+            </div>
+        </div>`;
+    }).join('');
+
+    // Animate cards in
+    requestAnimationFrame(() => {
+        grid.querySelectorAll('.asset-card').forEach((card, i) => {
+            card.style.opacity = '0';
+            card.style.transform = 'translateY(20px)';
+            card.style.transition = 'opacity 0.4s ease, transform 0.4s ease';
+            setTimeout(() => {
+                card.style.opacity = '1';
+                card.style.transform = 'translateY(0)';
+            }, i * 80);
+        });
+    });
+}
+
+function getComponentIcon(type) {
+    const icons = { 'Rail Clip': '🔩', 'Liner': '📐', 'Pad': '🟫' };
+    return icons[type] || '⚙️';
+}
+
+function formatDate(dateStr) {
+    if (!dateStr) return 'N/A';
+    const d = new Date(dateStr);
+    return d.toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' });
+}
+
+function setupRailwaySearch() {
+    const searchInput = document.getElementById('searchAsset');
+    const filterSelect = document.getElementById('filterStatus');
+    if (!searchInput || !filterSelect) return;
+
+    function applyFilters() {
+        const query = searchInput.value.toLowerCase().trim();
+        const status = filterSelect.value;
+
+        const filtered = RAILWAY_ASSETS.filter(asset => {
+            const matchesSearch = !query
+                || asset.id.toLowerCase().includes(query)
+                || asset.name.toLowerCase().includes(query)
+                || asset.zone.toLowerCase().includes(query)
+                || asset.trackSection.toLowerCase().includes(query)
+                || asset.type.toLowerCase().includes(query);
+            const matchesStatus = status === 'all' || asset.status === status;
+            return matchesSearch && matchesStatus;
+        });
+
+        renderAssets(filtered);
+    }
+
+    searchInput.addEventListener('input', applyFilters);
+    filterSelect.addEventListener('change', applyFilters);
+}
+
+function setupQRModal() {
+    const openBtns = [
+        document.getElementById('mainScanBtn')
+    ];
+    const modal = document.getElementById('qrModal');
+    const closeBtn = document.getElementById('closeQrModal');
+    if (!modal) return;
+
+    function openModal() {
+        modal.hidden = false;
+        modal.style.animation = 'none';
+        // Simulate random asset scan after 2.5s
+        setTimeout(() => {
+            if (!modal.hidden) {
+                modal.hidden = true;
+                const randomAsset = RAILWAY_ASSETS[Math.floor(Math.random() * RAILWAY_ASSETS.length)];
+                showRailwayNotification(`✅ QR Scanned: ${randomAsset.name} (${randomAsset.id})`, 'success');
+                // Highlight matched card
+                const card = document.getElementById(`asset-${randomAsset.id.replace(/[^a-z0-9]/gi, '-')}`);
+                if (card) {
+                    card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    card.style.outline = '2px solid #4ade80';
+                    card.style.boxShadow = '0 0 20px rgba(74,222,128,0.3)';
+                    setTimeout(() => {
+                        card.style.outline = '';
+                        card.style.boxShadow = '';
+                    }, 3000);
+                }
+            }
+        }, 2500);
+    }
+
+    openBtns.forEach(btn => {
+        if (btn) btn.addEventListener('click', openModal);
+    });
+
+    if (closeBtn) closeBtn.addEventListener('click', () => { modal.hidden = true; });
+    modal.addEventListener('click', e => { if (e.target === modal) modal.hidden = true; });
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') modal.hidden = true; });
+}
+
+function setupHeroScanBtn() {
+    const heroBtn = document.getElementById('heroScanBtn');
+    if (!heroBtn) return;
+    heroBtn.addEventListener('click', () => {
+        const railwaySection = document.getElementById('railway');
+        if (railwaySection) railwaySection.scrollIntoView({ behavior: 'smooth' });
+        setTimeout(() => {
+            const mainScanBtn = document.getElementById('mainScanBtn');
+            if (mainScanBtn) mainScanBtn.click();
+        }, 700);
+    });
+}
+
+function showRailwayNotification(msg, type = 'info') {
+    const notification = document.createElement('div');
+    notification.textContent = msg;
+    Object.assign(notification.style, {
+        position: 'fixed',
+        top: '80px',
+        right: '20px',
+        padding: '14px 20px',
+        borderRadius: '10px',
+        color: 'white',
+        zIndex: '10001',
+        fontSize: '14px',
+        fontWeight: '600',
+        maxWidth: '360px',
+        background: type === 'success'
+            ? 'linear-gradient(135deg, #10b981, #059669)'
+            : type === 'error'
+            ? 'linear-gradient(135deg, #ef4444, #dc2626)'
+            : 'linear-gradient(135deg, #3b82f6, #2563eb)',
+        boxShadow: '0 8px 24px rgba(0,0,0,0.3)',
+        animation: 'slideDown 0.3s ease-out',
+        transition: 'all 0.3s ease'
+    });
+    document.body.appendChild(notification);
+    setTimeout(() => {
+        notification.style.opacity = '0';
+        notification.style.transform = 'translateX(20px)';
+        setTimeout(() => notification.remove(), 350);
+    }, 3500);
 }

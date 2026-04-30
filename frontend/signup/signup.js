@@ -1,5 +1,5 @@
 /**
- * signup.js — Login + Register with real backend API
+ * signup.js — Login + Register + OTP with real backend API
  * Connects to: http://localhost:5000/api/auth
  */
 'use strict';
@@ -9,12 +9,13 @@ const API_BASE      = 'http://localhost:5000/api';
 const REDIRECT_DELAY = 1500;
 const byId = (id) => document.getElementById(id);
 
+let pendingVerificationEmail = '';
+
 /* ─── Redirect if already logged in ─────────────────────────── */
 (function checkAlreadyLoggedIn() {
   const token = localStorage.getItem('authToken');
   if (!token) return;
 
-  // Quick decode to check expiry (no network needed)
   try {
     const payload = JSON.parse(atob(token.split('.')[1].replace(/-/g, '+').replace(/_/g, '/')));
     if (payload.exp && Math.floor(Date.now() / 1000) < payload.exp) {
@@ -29,22 +30,45 @@ const byId = (id) => document.getElementById(id);
 function showLoginPanel() {
   const loginPanel    = byId('loginPanel');
   const registerPanel = byId('registerPanel');
+  const otpPanel      = byId('otpPanel');
   if (loginPanel)    loginPanel.style.display = 'flex';
   if (registerPanel) registerPanel.style.display = 'none';
+  if (otpPanel)      otpPanel.style.display = 'none';
   window.history.replaceState(null, '', '#login');
 }
 
 function showRegisterPanel() {
   const loginPanel    = byId('loginPanel');
   const registerPanel = byId('registerPanel');
+  const otpPanel      = byId('otpPanel');
   if (loginPanel)    loginPanel.style.display = 'none';
   if (registerPanel) registerPanel.style.display = 'flex';
+  if (otpPanel)      otpPanel.style.display = 'none';
   window.history.replaceState(null, '', '#register');
+}
+
+function showOtpPanel(email) {
+  const loginPanel    = byId('loginPanel');
+  const registerPanel = byId('registerPanel');
+  const otpPanel      = byId('otpPanel');
+  
+  if (loginPanel)    loginPanel.style.display = 'none';
+  if (registerPanel) registerPanel.style.display = 'none';
+  if (otpPanel)      otpPanel.style.display = 'flex';
+  
+  pendingVerificationEmail = email;
+  const emailDisplay = byId('otpEmailDisplay');
+  if (emailDisplay) emailDisplay.textContent = email;
+
+  // Focus first input
+  const firstInput = document.querySelector('.otp-digit');
+  if (firstInput) firstInput.focus();
 }
 
 function bindPanelSwitching() {
   byId('showRegister')?.addEventListener('click', (e) => { e.preventDefault(); showRegisterPanel(); });
   byId('showLogin')?.addEventListener('click',    (e) => { e.preventDefault(); showLoginPanel(); });
+  byId('backToRegisterBtn')?.addEventListener('click', (e) => { e.preventDefault(); showRegisterPanel(); });
 }
 
 /* ─── Validation Helpers ─────────────────────────────────────── */
@@ -76,7 +100,6 @@ function closeSuccess() {
 }
 
 function showError(message) {
-  // Remove existing errors
   document.querySelectorAll('.api-error-toast').forEach(e => e.remove());
 
   const error = document.createElement('div');
@@ -93,7 +116,6 @@ function showError(message) {
   setTimeout(() => error.remove(), 6000);
 }
 
-/* ─── Button Loading State ───────────────────────────────────── */
 function setButtonLoading(btn, loading, originalText) {
   if (!btn) return;
   btn.disabled = loading;
@@ -115,8 +137,6 @@ function saveAuthData(data) {
   localStorage.setItem('refreshToken',  data.refreshToken || '');
   localStorage.setItem('isLoggedIn',    'true');
   localStorage.setItem('currentUser',   JSON.stringify(data.user));
-  localStorage.setItem('currentUser_email', data.user.email);
-  localStorage.setItem('userFirstName', data.user.firstName);
 }
 
 /* ─── Login Handler ──────────────────────────────────────────── */
@@ -143,7 +163,12 @@ async function handleLogin(event) {
     const data = await res.json();
 
     if (!res.ok || !data.success) {
-      showError(data.message || 'Login failed. Please check your credentials.');
+      if (data.requireOtp) {
+        showSuccess('Please verify your email first.');
+        showOtpPanel(email);
+      } else {
+        showError(data.message || 'Login failed. Please check your credentials.');
+      }
       setButtonLoading(submitBtn, false, 'Login');
       return;
     }
@@ -206,19 +231,124 @@ async function handleRegister(event) {
       return;
     }
 
-    saveAuthData(data);
-
-    showSuccess(`🎉 Account created! Welcome, ${data.user.firstName}! Redirecting...`);
+    if (data.requireOtp) {
+      showSuccess('✅ Code sent! Check your email.');
+      showOtpPanel(data.email || email);
+    } else {
+      saveAuthData(data);
+      showSuccess(`🎉 Account created! Welcome! Redirecting...`);
+      setTimeout(() => { window.location.href = '../dashboard/dash.html'; }, REDIRECT_DELAY);
+    }
+    
     event.target.reset();
+  } catch (err) {
+    console.error('Register network error:', err);
+    showError('Cannot connect to server. Make sure backend is running on port 5000.');
+  } finally {
+    setButtonLoading(submitBtn, false, 'Create Account');
+  }
+}
 
+/* ─── OTP Handlers ───────────────────────────────────────────── */
+function setupOtpInputs() {
+  const inputs = document.querySelectorAll('.otp-digit');
+  inputs.forEach((input, index) => {
+    input.addEventListener('input', (e) => {
+      if (e.target.value.length > 1) {
+        e.target.value = e.target.value.slice(0, 1);
+      }
+      if (e.target.value !== '' && index < inputs.length - 1) {
+        inputs[index + 1].focus();
+      }
+    });
+
+    input.addEventListener('keydown', (e) => {
+      if (e.key === 'Backspace' && e.target.value === '' && index > 0) {
+        inputs[index - 1].focus();
+      }
+    });
+
+    input.addEventListener('paste', (e) => {
+      e.preventDefault();
+      const pastedData = e.clipboardData.getData('text').slice(0, 6);
+      if (/^\d+$/.test(pastedData)) {
+        pastedData.split('').forEach((char, i) => {
+          if (inputs[i]) inputs[i].value = char;
+        });
+        if (pastedData.length === 6) inputs[5].focus();
+      }
+    });
+  });
+}
+
+async function handleVerifyOtp(event) {
+  event.preventDefault();
+  
+  const inputs = document.querySelectorAll('.otp-digit');
+  let otp = '';
+  inputs.forEach(input => otp += input.value);
+
+  if (otp.length !== 6) return showError('Please enter all 6 digits of the verification code.');
+
+  const submitBtn = event.target.querySelector('button[type="submit"]');
+  setButtonLoading(submitBtn, true, 'Verify & Proceed');
+
+  try {
+    const res = await fetch(`${API_BASE}/auth/verify-otp`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email: pendingVerificationEmail, otp }),
+    });
+
+    const data = await res.json();
+
+    if (!res.ok || !data.success) {
+      showError(data.message || 'Verification failed. Please try again.');
+      setButtonLoading(submitBtn, false, 'Verify & Proceed');
+      return;
+    }
+
+    saveAuthData(data);
+    showSuccess('🎉 Email verified successfully! Redirecting...');
+    
     setTimeout(() => {
       window.location.href = '../dashboard/dash.html';
     }, REDIRECT_DELAY);
 
   } catch (err) {
-    console.error('Register network error:', err);
-    showError('Cannot connect to server. Make sure backend is running on port 5000.');
-    setButtonLoading(submitBtn, false, 'Create Account');
+    showError('Cannot connect to server.');
+    setButtonLoading(submitBtn, false, 'Verify & Proceed');
+  }
+}
+
+async function handleResendOtp(event) {
+  event.preventDefault();
+  if (!pendingVerificationEmail) return showError('Email not found. Please try registering again.');
+
+  const resendBtn = event.target;
+  resendBtn.style.pointerEvents = 'none';
+  resendBtn.style.opacity = '0.5';
+
+  try {
+    const res = await fetch(`${API_BASE}/auth/resend-otp`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email: pendingVerificationEmail }),
+    });
+
+    const data = await res.json();
+    if (res.ok && data.success) {
+      showSuccess('✅ New code sent to your email.');
+    } else {
+      showError(data.message || 'Failed to resend code.');
+    }
+  } catch (err) {
+    showError('Cannot connect to server.');
+  } finally {
+    setTimeout(() => {
+      resendBtn.style.pointerEvents = 'auto';
+      resendBtn.style.opacity = '1';
+    }, 10000); // 10s cooldown
   }
 }
 
@@ -270,7 +400,6 @@ function restoreSavedLoginEmail() {
   if (rememberBox) rememberBox.checked = true;
 }
 
-/* ─── Phone formatter ────────────────────────────────────────── */
 function attachPhoneFormatter() {
   const phoneInput = byId('phone');
   if (!phoneInput) return;
@@ -279,7 +408,6 @@ function attachPhoneFormatter() {
   });
 }
 
-/* ─── Social login (UI only — real OAuth not implemented) ─────── */
 function handleSocialLogin(event) {
   event.preventDefault();
   const btn = event.target.closest('button');
@@ -292,9 +420,13 @@ function handleSocialLogin(event) {
 function bindFormEvents() {
   byId('loginForm')?.addEventListener('submit',    handleLogin);
   byId('registerForm')?.addEventListener('submit', handleRegister);
+  byId('otpForm')?.addEventListener('submit',      handleVerifyOtp);
+  byId('resendOtpBtn')?.addEventListener('click',  handleResendOtp);
+  
   byId('registerPassword')?.addEventListener('input', checkPasswordStrength);
   byId('confirmPassword')?.addEventListener('input',  checkPasswordMatch);
   byId('closeSuccessBtn')?.addEventListener('click',  closeSuccess);
+  
   document.querySelectorAll('.social-btn').forEach((b) => b.addEventListener('click', handleSocialLogin));
   document.querySelectorAll('.toggle-password').forEach((b) => {
     b.addEventListener('click', () => {
@@ -309,12 +441,12 @@ function initAuth() {
   showLoginPanel();
   bindPanelSwitching();
   bindFormEvents();
+  setupOtpInputs();
   restoreSavedLoginEmail();
   attachPhoneFormatter();
 }
 
 document.addEventListener('DOMContentLoaded', initAuth);
 
-// Expose for inline HTML use
 window.togglePassword = togglePassword;
 window.closeSuccess   = closeSuccess;

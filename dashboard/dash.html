@@ -3,344 +3,228 @@
 
 <head>
 
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
-<link rel="preconnect" href="https://github.com" crossorigin>
-<link rel="stylesheet"
-href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
+    <link rel="preconnect" href="https://github.com" crossorigin>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
-<title> Finance Dashboard | finaDash</title>
+    <title>Railway Asset Tracking System | finaDash</title>
 
-<!-- CSS CONNECT -->
-<link rel="stylesheet" href="common.css">
-<link rel="stylesheet" href="dash.css">
+    <!-- CSS CONNECT -->
+    <link rel="stylesheet" href="common.css">
+    <link rel="stylesheet" href="dash.css">
 
 </head>
 
 <body>
 
-<!-- Header: Top Bar + Navigation -->
-<header class="topbar">
+    <!-- Header: Top Bar + Navigation -->
+    <header class="topbar">
 
-<!-- DESKTOP NAVBAR -->
-<nav class="desktop-nav">
-    <a href="#finance">Finance</a>
-    <a href="setting/setting.html">Settings</a>
-    <a href="./gemini/gemini.html">Gemini</a>
-</nav>
+        <!-- DESKTOP NAVBAR -->
+        <nav class="desktop-nav">
+            <a href="setting/setting.html">Settings</a>
+            <a href="./gemini/gemini.html">Gemini</a>
+            <a href="#railway" style="color: #4ade80; font-weight: 700;">Railway Asset Tracking (25021)</a>
+        </nav>
 
-<div class="topbar-left">
-    <!-- HAMBURGER MENU -->
-    <div class="hamburger" id="hamburgerMenu">
-        <span></span>
-        <span></span>
-        <span></span>
-    </div>
+        <div class="topbar-left">
+            <!-- HAMBURGER MENU -->
+            <div class="hamburger" id="hamburgerMenu">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
 
-    <div class="nav-badge" aria-label="Finance message badge">
-        <span class="nav-badge-icon">🚀</span>
-        <span>Finance Management Tomorrow, Today</span>
-    </div>
-</div>
-
-<!-- MOBILE MENU -->
-<nav class="menu" id="menu">
-    <a href="#finance">Finance</a>
-    <a href="setting/setting.html">Settings</a>
-    <a href="./gemini/gemini.html">Gemini</a>
-</nav>
-
-<button class="profile-button" id="profileButton" type="button" aria-label="Profile">
-    <img src="" alt="Profile" data-profile-image />
-</button>
-<input type="file" id="profileImageInput" accept="image/*" hidden>
-
-<div class="profile-view-overlay" id="profileViewOverlay" hidden>
-    <div class="profile-view-card" role="dialog" aria-modal="true" aria-labelledby="profileViewTitle">
-        <div class="profile-view-header">
-            <h3 id="profileViewTitle">Profile Overview</h3>
-            <button class="profile-view-close" id="closeProfileView" type="button" aria-label="Close profile overview">&times;</button>
+            <div class="nav-badge" aria-label="System badge">
+                <span class="nav-badge-icon">🚆</span>
+                <span>Railway Component Tracking Live</span>
+            </div>
         </div>
 
-        <div class="profile-view-body">
-            <div class="profile-view-top">
-                <img class="profile-view-avatar" src="" alt="Profile" data-profile-image />
-                <div class="profile-view-meta">
-                    <p id="pvName">Not set</p>
-                    <span id="pvRole">viewer</span>
+        <!-- MOBILE MENU -->
+        <nav class="menu" id="menu">
+            <a href="setting/setting.html">Settings</a>
+            <a href="./gemini/gemini.html">Gemini</a>
+            <a href="#railway" style="color: #4ade80; font-weight: 700;">Railway Asset Tracking (25021)</a>
+        </nav>
+
+        <button class="profile-button" id="profileButton" type="button" aria-label="Profile">
+            <img src="" alt="Profile" data-profile-image />
+        </button>
+        <input type="file" id="profileImageInput" accept="image/*" hidden>
+
+        <div class="profile-view-overlay" id="profileViewOverlay" hidden>
+            <div class="profile-view-card" role="dialog" aria-modal="true" aria-labelledby="profileViewTitle">
+                <div class="profile-view-header">
+                    <h3 id="profileViewTitle">Profile Overview</h3>
+                    <button class="profile-view-close" id="closeProfileView" type="button"
+                        aria-label="Close profile overview">&times;</button>
+                </div>
+
+                <div class="profile-view-body">
+                    <div class="profile-view-top">
+                        <img class="profile-view-avatar" src="" alt="Profile" data-profile-image />
+                        <div class="profile-view-meta">
+                            <p id="pvName">Not set</p>
+                            <span id="pvRole">viewer</span>
+                        </div>
+                    </div>
+
+                    <div class="profile-view-grid">
+                        <div><label>Email</label><strong id="pvEmail">Not set</strong></div>
+                        <div><label>Phone</label><strong id="pvPhone">Not set</strong></div>
+                        <div><label>Organization</label><strong id="pvOrg">Not set</strong></div>
+                        <div><label>Total Transactions</label><strong id="pvCount">0</strong></div>
+                    </div>
+                </div>
+
+                <p class="profile-view-note">Profile details can be edited only from Settings page.</p>
+            </div>
+        </div>
+
+    </header>
+
+
+    <!-- Hero Section -->
+    <section class="home" id="home">
+        <div class="description">
+
+            <h1 class="title">
+                <span class="gradient-text">Railway Assets</span> Tracking System
+            </h1>
+
+            <p class="paragraph">
+                AI-based Laser QR Code tracking for railway components. Track component details, scan QR codes, monitor
+                active statuses, and keep inspection logs up to date.
+            </p>
+
+            <div class="hero-actions" style="margin-top: 30px;">
+                <button class="btn" id="heroScanBtn" aria-label="Scan QR Code">
+                    <span><i class="fa-solid fa-qrcode" style="margin-right: 8px;"></i> Scan Asset QR</span>
+                </button>
+            </div>
+
+        </div>
+
+        <div class="users-color-container">
+
+            <span class="item" style="--i: 1"></span>
+
+            <img class="item"
+                src="https://github.com/ecemgo/mini-samples-great-tricks/assets/13468728/274f29ce-0d3f-4ac2-a2aa-f9b7bd188b2a"
+                style="--i: 2" loading="eager" fetchpriority="high" decoding="async" alt="" />
+
+            <span class="item" style="--i: 3"></span>
+
+            <img class="item"
+                src="https://github.com/ecemgo/mini-samples-great-tricks/assets/13468728/b8a14493-3d9f-4b9b-b93a-56d0bc7243e9"
+                style="--i: 4" loading="eager" fetchpriority="high" decoding="async" alt="" />
+
+            <img class="item"
+                src="https://github.com/ecemgo/mini-samples-great-tricks/assets/13468728/03e51e1e-9750-45a5-b75e-a1e341d4562a"
+                style="--i: 10" loading="lazy" decoding="async" alt="" />
+
+            <span class="item" style="--i: 11"></span>
+
+            <img class="item"
+                src="https://github.com/ecemgo/mini-samples-great-tricks/assets/13468728/5eb50f89-3e5a-480e-860c-8d40d3ba9ffe"
+                style="--i: 12" loading="lazy" decoding="async" alt="" />
+
+            <span class="item" style="--i: 5"></span>
+
+            <span class="item" style="--i: 9"></span>
+
+            <img class="item"
+                src="https://github.com/ecemgo/mini-samples-great-tricks/assets/13468728/86c71a79-2efe-4567-8665-b1e5a1fd9735"
+                style="--i: 8" loading="lazy" decoding="async" alt="" />
+
+            <span class="item" style="--i: 7"></span>
+
+            <img class="item"
+                src="https://github.com/ecemgo/mini-samples-great-tricks/assets/13468728/97ef9643-5202-41aa-80f0-ceeabccdd099"
+                style="--i: 6" loading="lazy" decoding="async" alt="" />
+
+        </div>
+    </section>
+
+    <!-- Railway Asset Tracking System (Problem ID: 25021) -->
+    <section class="railway-dashboard" id="railway">
+        <div class="railway-container">
+
+            <div class="railway-header">
+                <div>
+                    <h2>Railway Asset Tracking System</h2>
+                    <p class="problem-id">Problem ID: 25021</p>
+                </div>
+                <div class="railway-controls">
+                    <button class="btn scan-btn" id="mainScanBtn">
+                        <i class="fa-solid fa-camera"></i> Scan QR Code
+                    </button>
                 </div>
             </div>
 
-            <div class="profile-view-grid">
-                <div><label>Email</label><strong id="pvEmail">Not set</strong></div>
-                <div><label>Phone</label><strong id="pvPhone">Not set</strong></div>
-                <div><label>Organization</label><strong id="pvOrg">Not set</strong></div>
-                <div><label>Total Transactions</label><strong id="pvCount">0</strong></div>
-            </div>
-        </div>
-
-        <p class="profile-view-note">Profile details can be edited only from Settings page.</p>
-    </div>
-</div>
-
-</header>
-
-
-<!-- Hero Section -->
-<section class="home" id="home">
-<div class="description">
-
-<h1 class="title">
-<span class="gradient-text">Finance Dashboard</span> - Manage Your  Finances
-</h1>
-
-<p class="paragraph">
-Complete financial management system for educational institutions. Track income, expenses, and generate reports with ease.
-</p>
-
-<form id="form" autocomplete="off">
-
-<input
-type="email"
-id="email-id"
-name="email_address"
-aria-label="email adress"
-placeholder=""
-required />
-
-<button type="submit" class="btn" aria-label="submit">
-<span>Get Started</span>
-<ion-icon name="arrow-forward-outline"></ion-icon>
-</button>
-
-</form>
-
-</div>
-
-<div class="users-color-container">
-
-<span class="item" style="--i: 1"></span>
-
-<img
-class="item"
-src="https://github.com/ecemgo/mini-samples-great-tricks/assets/13468728/274f29ce-0d3f-4ac2-a2aa-f9b7bd188b2a"
-style="--i: 2"
-loading="eager"
-fetchpriority="high"
-decoding="async"
-alt="" />
-
-<span class="item" style="--i: 3"></span>
-
-<img
-class="item"
-src="https://github.com/ecemgo/mini-samples-great-tricks/assets/13468728/b8a14493-3d9f-4b9b-b93a-56d0bc7243e9"
-style="--i: 4"
-loading="eager"
-fetchpriority="high"
-decoding="async"
-alt="" />
-
-<img
-class="item"
-src="https://github.com/ecemgo/mini-samples-great-tricks/assets/13468728/03e51e1e-9750-45a5-b75e-a1e341d4562a"
-style="--i: 10"
-loading="lazy"
-decoding="async"
-alt="" />
-
-<span class="item" style="--i: 11"></span>
-
-<img
-class="item"
-src="https://github.com/ecemgo/mini-samples-great-tricks/assets/13468728/5eb50f89-3e5a-480e-860c-8d40d3ba9ffe"
-style="--i: 12"
-loading="lazy"
-decoding="async"
-alt="" />
-
-<span class="item" style="--i: 5"></span>
-
-<span class="item" style="--i: 9"></span>
-
-<img
-class="item"
-src="https://github.com/ecemgo/mini-samples-great-tricks/assets/13468728/86c71a79-2efe-4567-8665-b1e5a1fd9735"
-style="--i: 8"
-loading="lazy"
-decoding="async"
-alt="" />
-
-<span class="item" style="--i: 7"></span>
-
-<img
-class="item"
-src="https://github.com/ecemgo/mini-samples-great-tricks/assets/13468728/97ef9643-5202-41aa-80f0-ceeabccdd099"
-style="--i: 6"
-loading="lazy"
-decoding="async"
-alt="" />
-
-</div>
-</section>
-
-<!-- Main Dashboard: Summary, Charts, Transactions -->
-<section class="finance-dashboard" id="finance">
-    <div class="finance-container">
-        
-        <!-- Role Switcher -->
-        <div class="role-switcher">
-            <span>Current Role: </span>
-            <div class="role-toggle">
-                <button class="role-btn active" data-role="viewer">Viewer</button>
-                <button class="role-btn" data-role="admin">Admin</button>
-            </div>
-        </div>
-
-        <!-- Overview Cards -->
-        <div class="overview-cards">
-            <div class="card balance-card">
-                <div class="card-icon">💰</div>
-                <div class="card-content">
-                    <h3>Total Balance</h3>
-                    <p class="amount" id="totalBalance">₹0.00</p>
-                    <span class="trend positive">+12.5%</span>
+            <div class="search-filter-bar">
+                <div class="search-box">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                    <input type="text" id="searchAsset" placeholder="Search by ID, Name or Location...">
                 </div>
+                <select id="filterStatus" class="filter-dropdown">
+                    <option value="all">All Status</option>
+                    <option value="Active">Active</option>
+                    <option value="Damaged">Damaged</option>
+                    <option value="Replaced">Replaced</option>
+                </select>
             </div>
-            <div class="card income-card">
-                <div class="card-icon">📈</div>
-                <div class="card-content">
-                    <h3>Total Income</h3>
-                    <p class="amount" id="totalIncome">₹0.00</p>
-                    <span class="trend positive">+8.2%</span>
-                </div>
-            </div>
-            <div class="card expense-card">
-                <div class="card-icon">📉</div>
-                <div class="card-content">
-                    <h3>Total Expenses</h3>
-                    <p class="amount" id="totalExpenses">₹0.00</p>
-                    <span class="trend negative">-3.4%</span>
-                </div>
-            </div>
-        </div>
 
-        <!-- Insights -->
-        <div class="insights-section">
-            <div class="insight-card">
-                <h3>Best Month (Net)</h3>
-                <p class="insight-title" id="bestMonth">No data</p>
-                <p class="insight-value" id="bestMonthNet">₹0</p>
-            </div>
-            <div class="insight-card">
-                <h3>Top Income Category</h3>
-                <p class="insight-title" id="topIncomeCategory">No income</p>
-                <p class="insight-value" id="topIncomeAmount">₹0</p>
-            </div>
-            <div class="insight-card">
-                <h3>Top Expense Category</h3>
-                <p class="insight-title" id="topExpenseCategory">No expense</p>
-                <p class="insight-value" id="topExpenseAmount">₹0</p>
-            </div>
-        </div>
-
-        <!-- Charts Section -->
-        <div class="charts-container">
-            <div class="chart-card">
-                <h3>Monthly Trend</h3>
-                <div class="chart-legend">
-                    <div class="legend-item">
-                        <div class="legend-color income"></div>
-                        <span>Income</span>
+            <!-- QR Scan Modal (Hidden by default) -->
+            <div class="qr-modal-overlay" id="qrModal" hidden>
+                <div class="qr-modal">
+                    <div class="qr-header">
+                        <h3>Scan Asset QR Code</h3>
+                        <button class="close-modal" id="closeQrModal">&times;</button>
                     </div>
-                    <div class="legend-item">
-                        <div class="legend-color expense"></div>
-                        <span>Expense</span>
+                    <div class="qr-scanner-ui">
+                        <div class="scanner-frame">
+                            <div class="laser"></div>
+                            <div class="corner top-left"></div>
+                            <div class="corner top-right"></div>
+                            <div class="corner bottom-left"></div>
+                            <div class="corner bottom-right"></div>
+                        </div>
+                        <p>Align QR Code within the frame to identify railway component</p>
                     </div>
-                </div>
-                <canvas id="monthlyChart" width="400" height="200"></canvas>
-            </div>
-            <div class="chart-card">
-                <h3>Category Breakdown</h3>
-                <canvas id="categoryChart" width="400" height="200"></canvas>
-            </div>
-        </div>
-
-        <!-- Transaction Management -->
-        <div class="transaction-section">
-            <div class="transaction-header">
-                <h3>Transactions</h3>
-                <div class="transaction-controls">
-                    <input type="text" id="searchTransaction" placeholder="Search transactions...">
-                    <select id="filterType">
-                        <option value="all">All</option>
-                        <option value="income">Income</option>
-                        <option value="expense">Expense</option>
-                    </select>
-                    <select id="sortBy">
-                        <option value="date">Sort by Date</option>
-                        <option value="amount">Sort by Amount</option>
-                    </select>
-                    <button class="add-transaction-btn admin-only" id="addTransactionBtn">+ Add Transaction</button>
-                    <button class="export-btn admin-only" id="saveBtn">💾 Save</button>
-                    <button class="export-btn" id="exportBtn">📊 Export</button>
                 </div>
             </div>
 
-            <!-- Transaction Form (Admin Only) -->
-            <div class="add-transaction-form" id="addTransactionForm" style="display: none;">
-                <h4 id="transactionFormTitle">Add New Transaction</h4>
-                <form id="transactionForm">
-                    <div class="form-row">
-                        <input type="number" id="amount" name="amount" placeholder="Amount" min="0" step="0.01" required>
-                        <input type="text" id="category" name="category" placeholder="Category" required>
-                    </div>
-                    <div class="form-row">
-                        <input type="date" id="date" name="date" required>
-                        <select id="type" name="type" required>
-                            <option value="">Select Type</option>
-                            <option value="income">Income</option>
-                            <option value="expense">Expense</option>
-                        </select>
-                    </div>
-                    <div class="form-row">
-                        <input type="text" id="description" name="description" placeholder="Description (optional)">
-                    </div>
-                    <div class="form-actions">
-                        <button type="submit" class="btn-primary">Add Transaction</button>
-                        <button type="button" class="btn-secondary" id="cancelTransaction">Cancel</button>
-                    </div>
-                </form>
+            <!-- Asset Grid -->
+            <div class="asset-grid" id="assetGrid">
+                <!-- Asset Cards will be dynamically injected here -->
             </div>
 
-            <!-- Transaction List -->
-            <div class="transactions-list" id="transactionsList">
-                <!-- Transactions will be dynamically added here -->
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="main-footer">
+        <div class="footer-bottom">
+            <div class="footer-content">
+                <p>&copy; 2026 Railway Asset Tracking System &mdash; Problem ID: 25021. All Rights Reserved</p>
+                <p class="designer">Designed by <span>Siddhartha Gupta</span></p>
             </div>
         </div>
-    </div>
-</section>
+    </footer>
 
-<!-- Footer -->
-<footer class="main-footer">
-    <div class="footer-bottom">
-        <div class="footer-content">
-            <p>&copy; 2026 Finance Dashboard. All Rights Reserved</p>
-            <p class="designer">Designed by <span>Siddhartha Gupta</span></p>
-        </div>
-    </div>
-</footer>
+    <!-- Page Logic -->
+    <script src="common.js" defer></script>
+    <script src="dash.js" defer></script>
 
-<!-- Page Logic -->
-<script src="common.js" defer></script>
-<script src="dash.js" defer></script>
-
-<!-- Icon Library -->
-<script type="module"
-src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <!-- Icon Library -->
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
 
 </body>
+
 </html>
