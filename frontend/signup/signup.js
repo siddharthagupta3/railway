@@ -5,7 +5,7 @@
 'use strict';
 
 /* ─── Config ─────────────────────────────────────────────────── */
-const API_BASE      = 'http://localhost:5000/api';
+const API_BASE = (window.APP_CONFIG && window.APP_CONFIG.API_BASE) || 'http://localhost:5000/api';
 const REDIRECT_DELAY = 1500;
 const byId = (id) => document.getElementById(id);
 

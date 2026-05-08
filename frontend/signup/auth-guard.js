@@ -9,7 +9,7 @@
 (function () {
   'use strict';
 
-  const API_BASE = 'http://localhost:5000/api';
+  const API_BASE = (window.APP_CONFIG && window.APP_CONFIG.API_BASE) || 'http://localhost:5000/api';
   const LOGIN_PAGE = '/signup/signup.html';
 
   /* ── Resolve login page path relative to current location ─── */
