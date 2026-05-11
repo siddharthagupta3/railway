@@ -19,7 +19,7 @@ const app = {
     },
 
     loadStorage() {
-        const data = localStorage.getItem('financeDashboard');
+        const data = localStorage.getItem('railwayDashboard');
         if (data) {
             const parsed = JSON.parse(data);
             this.user = parsed.user || 'viewer';
@@ -37,7 +37,7 @@ const app = {
     },
 
     saveStorage() {
-        localStorage.setItem('financeDashboard', JSON.stringify({ user: this.user, transactions: this.transactions }));
+        localStorage.setItem('railwayDashboard', JSON.stringify({ user: this.user, transactions: this.transactions }));
     }
 };
 
@@ -392,7 +392,7 @@ function setupEmailForm() {
         event.preventDefault();
         if (emailRegex.test(emailInput.value)) {
             form.innerHTML = '<p style="font-size: 2rem; font-weight: 500; color: #76a73f;">Subscribed! 🎉</p>';
-            setTimeout(() => byId('finance')?.scrollIntoView({ behavior: 'smooth' }), 1700);
+            setTimeout(() => byId('railway')?.scrollIntoView({ behavior: 'smooth' }), 1700);
         } else {
             showNotification('Enter valid email', 'error');
         }
@@ -444,7 +444,7 @@ function setupProfileOverview() {
 }
 
 function setupEventListeners() {
-    // Kept for potential future use — all finance UI removed
+    // Kept for potential future use — all railway UI removed
 }
 
 // Business Logic
@@ -564,7 +564,7 @@ function updateInsights() {
 }
 
 function getProfileMeta() {
-    const raw = localStorage.getItem('financeProfileMeta');
+    const raw = localStorage.getItem('railwayProfileMeta');
     if (!raw) return {};
 
     try {

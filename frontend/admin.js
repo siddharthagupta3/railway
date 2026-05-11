@@ -5,7 +5,7 @@ const qsa = (selector, root = document) => Array.from(root.querySelectorAll(sele
 const byId = (id) => document.getElementById(id);
 
 // ---------- Config ----------
-const TYPING_TEXT = 'Finance system ';
+const TYPING_TEXT = 'Railway system ';
 const TYPING_SPEED = 70;
 const TYPING_PAUSE = 1110;
 
@@ -18,19 +18,19 @@ const landingState = {
 
 // ---------- Chatbot Response Map ----------
 const replies = {
-  hello: 'Hello 👋 Finance Management System mein aapka welcome hai!',
-  hi: 'Hi 🚀 How can I help with your finances?',
-  portfolio: 'Portfolio management dashboard se manage karein.',
-  investment: 'Investment tracking tools available hain.',
-  returns: 'Returns analytics real-time dikhega.',
-  risk: 'Risk analysis aapke liye calculate karega.',
-  finance: 'Ye Finance Management System hai.',
+  hello: 'Hello 👋 Railway Management System mein aapka welcome hai!',
+  hi: 'Hi 🚀 How can I help with your railway operations?',
+  portfolio: 'Asset management dashboard se manage karein.',
+  investment: 'Maintenance tracking tools available hain.',
+  returns: 'Performance analytics real-time dikhega.',
+  risk: 'Safety analysis aapke liye calculate karega.',
+  railway: 'Ye Railway Management System hai.',
   account: 'Account details dashboard mein visible hain.',
   balance: 'Balance check account section se karein.',
   transaction: 'Transaction history available hai.',
   transfer: 'Transfer option banking section mein hai.',
   payment: 'Payment options available hain.',
-  loan: 'Loan details finance section mein milenge.',
+  loan: 'Maintenance details railway section mein milenge.',
   credit: 'Credit score profile mein dikhega.',
   debit: 'Debit details transaction history mein hai.',
   savings: 'Savings goals set karein dashboard se.',
@@ -45,9 +45,9 @@ const replies = {
   help: 'Help section mein guidance milegi.',
   contact: 'Contact us page se reach out karein.',
   thanks: 'Welcome! 😊',
-  bye: 'Bye! 👋 Good luck with finances!',
-  'what is finance': 'Finance management system for portfolio handling.',
-  'your name': "I'm Finance AI Assistant 🤖",
+  bye: 'Bye! 👋 Good luck with operations!',
+  'what is railway': 'Railway management system for asset tracking.',
+  'your name': "I'm Railway AI Assistant 🤖",
   'who made you': 'Developed by Siddhartha Gupta 👨‍💻',
   'how to start': 'Dashboard se start karein.',
   features: 'Analytics, Reports, Tracking - sab available hai.',
@@ -66,13 +66,13 @@ const replies = {
   notification: 'Notifications real-time milenge.',
   alert: 'Alerts important updates ke liye hain.',
   default: [
-    'Aap mujhse finance related kuch bhi puch sakte hain 😊',
+    'Aap mujhse railway related kuch bhi puch sakte hain 😊',
     'Portfolio, investment ya transaction ke baare mein poochiye.',
-    'Finance management ke features puchiye.',
-    'Main aapki financial planning mein madad kar sakta hoon.',
+    'Railway management ke features puchiye.',
+    'Main aapki railway planning mein madad kar sakta hoon.',
     'Dashboard explore karke dekhiye features.',
     'Kya aapko analytics report chahiye?',
-    'Investment tracking mein help chahiye?',
+    'Asset tracking mein help chahiye?',
     'Budget planning start karna chahte hain?',
     'Main humesha aapki madad ke liye ready hoon 🚀'
   ]
@@ -103,7 +103,7 @@ function updateNavbarState() {
 function setFooterYear() {
   const footerYear = qs('.footer-bottom p');
   if (footerYear) {
-    footerYear.textContent = `© ${new Date().getFullYear()} Finance. All rights reserved.`;
+    footerYear.textContent = `© ${new Date().getFullYear()} Railway. All rights reserved.`;
   }
 }
 
@@ -264,7 +264,7 @@ function toggleChat() {
 
   box.style.display = box.style.display === 'flex' ? 'none' : 'flex';
   if (box.style.display === 'flex' && !localStorage.getItem('greeted')) {
-    addBotMessage('Hello 👋 Welcome to Finance AI Assistant!');
+    addBotMessage('Hello 👋 Welcome to Railway AI Assistant!');
     localStorage.setItem('greeted', 'yes');
   }
 }

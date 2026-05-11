@@ -4,9 +4,9 @@ const byId = (id) => document.getElementById(id);
 const qsa = (selector, root = document) => Array.from(root.querySelectorAll(selector));
 
 // ---------- Storage Keys ----------
-const STORAGE_KEY = 'financeDashboard';
-const PROFILE_IMAGE_KEY = 'financeProfileImage';
-const PROFILE_META_KEY = 'financeProfileMeta';
+const STORAGE_KEY = 'railwayDashboard';
+const PROFILE_IMAGE_KEY = 'railwayProfileImage';
+const PROFILE_META_KEY = 'railwayProfileMeta';
 const DASHBOARD_IMAGE_FALLBACK = 'images/grid-fallback.svg';
 
 function isUnsafeLocalImagePath(src) {
@@ -48,7 +48,7 @@ function attachImageFallbacks() {
 }
 
 // ---------- Shared Data Store ----------
-const financeStore = {
+const railwayStore = {
   state: {
     user: 'viewer',
     transactions: []
@@ -87,7 +87,7 @@ const financeStore = {
   },
 
   notify() {
-    window.dispatchEvent(new CustomEvent('finance:data-changed', { detail: this.getState() }));
+    window.dispatchEvent(new CustomEvent('railway:data-changed', { detail: this.getState() }));
   },
 
   getState() {
@@ -108,15 +108,15 @@ const financeStore = {
 
   onChange(handler) {
     const wrapped = () => handler(this.getState());
-    window.addEventListener('finance:data-changed', wrapped);
-    return () => window.removeEventListener('finance:data-changed', wrapped);
+    window.addEventListener('railway:data-changed', wrapped);
+    return () => window.removeEventListener('railway:data-changed', wrapped);
   }
 };
 
 // 3. Event Handlers (buttons, forms, search, filter)
 // ---------- Event Handlers ----------
 document.addEventListener('DOMContentLoaded', () => {
-  financeStore.init();
+  railwayStore.init();
   applyRoleVisibility();
   attachImageFallbacks();
   setupProfileImage();
@@ -159,7 +159,7 @@ function downloadFile(content, filename, mimeType) {
 
 // ---------- Role UI ----------
 function applyRoleVisibility() {
-  document.body.classList.toggle('admin-mode', financeStore.state.user === 'admin');
+  document.body.classList.toggle('admin-mode', railwayStore.state.user === 'admin');
 }
 
 // ---------- Profile Image ----------
@@ -232,7 +232,7 @@ function setupProfileImage() {
 // ---------- Not used in this shared module ----------
 
 // ---------- GLOBAL API ----------
-window.financeStore = financeStore;
+window.railwayStore = railwayStore;
 window.showNotification = showNotification;
 window.downloadFile = downloadFile;
 window.applyRoleVisibility = applyRoleVisibility;

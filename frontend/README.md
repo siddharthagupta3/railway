@@ -1,6 +1,6 @@
-# InterProject - Finance Management Web App
+# InterProject - Railway Management Web App
 
-InterProject is a responsive, frontend-first Finance Management System built using pure HTML, CSS, and Vanilla JavaScript.
+InterProject is a responsive, frontend-first Railway Management System built using pure HTML, CSS, and Vanilla JavaScript.
 It includes a landing experience, authentication flow, analytics dashboard, settings management, support pages, and legal pages.
 
 ## Project Description
@@ -23,7 +23,7 @@ Demo login: use any Gmail and any password to login.
 
 - Landing page with animated hero, navigation, and chatbot widget
 - Login/Register UI with validation and password strength hints
-- Finance dashboard with:
+- Railway dashboard with:
    - Total Balance, Income, Expense cards
    - Best month and top category insights
    - Monthly trend and category charts
@@ -112,3 +112,15 @@ MIT License. See LICENSE.
 ---
 
 Last Updated: April 5, 2026
+
+MONGODB_URI = mongodb+srv://USER:PASSWORD@cluster0.xxxxx.mongodb.net/interproject?retryWrites=true&w=majority
+JWT_SECRET = your_long_random_secret_1
+JWT_REFRESH_SECRET = your_long_random_secret_2
+ALLOWED_ORIGINS = https://your-project.vercel.app,https://your-project-git-main-yourname.vercel.app
+GEMINI_API_KEY = AIzaSy...
+SMTP_HOST = smtp.gmail.com
+SMTP_PORT = 587
+SMTP_USER = yourgmail@gmail.com
+SMTP_PASS = your_app_password
+FROM_EMAIL = yourgmail@gmail.com
+NODE_ENV = production

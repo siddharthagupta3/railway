@@ -1,8 +1,8 @@
 // 1. App State / Init
 // ---------- Storage Keys ----------
-const STORAGE_KEY = 'financeDashboard';
-const PROFILE_IMAGE_KEY = 'financeProfileImage';
-const PROFILE_META_KEY = 'financeProfileMeta';
+const STORAGE_KEY = 'railwayDashboard';
+const PROFILE_IMAGE_KEY = 'railwayProfileImage';
+const PROFILE_META_KEY = 'railwayProfileMeta';
 
 // ---------- DOM Helper ----------
 const byId = (id) => document.getElementById(id);

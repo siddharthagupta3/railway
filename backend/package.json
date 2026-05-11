@@ -1,7 +1,7 @@
 {
   "name": "interproject-backend",
   "version": "1.0.0",
-  "description": "Professional Node.js + MongoDB backend for Zorvyn / Railway Asset Tracking",
+  "description": "Professional Node.js + MongoDB backend for Railway Asset Tracking",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
