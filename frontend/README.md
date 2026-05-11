@@ -117,7 +117,6 @@ MONGODB_URI = mongodb+srv://USER:PASSWORD@cluster0.xxxxx.mongodb.net/interprojec
 JWT_SECRET = your_long_random_secret_1
 JWT_REFRESH_SECRET = your_long_random_secret_2
 ALLOWED_ORIGINS = https://your-project.vercel.app,https://your-project-git-main-yourname.vercel.app
-GEMINI_API_KEY = AIzaSy...
 SMTP_HOST = smtp.gmail.com
 SMTP_PORT = 587
 SMTP_USER = yourgmail@gmail.com

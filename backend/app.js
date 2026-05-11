@@ -11,7 +11,6 @@ const logger = require('./utils/logger');
 const { apiLimiter } = require('./middleware/rateLimiter');
 const authRoutes = require('./routes/auth');
 const assetRoutes = require('./routes/assets');
-const geminiRoutes = require('./routes/gemini');
 
 const app = express();
 
@@ -85,7 +84,6 @@ app.get('/api/health', (req, res) => {
 
 app.use('/api/auth', authRoutes);
 app.use('/api/assets', assetRoutes);
-app.use('/api/gemini', geminiRoutes);
 
 /* ===========================================
    SERVE FRONTEND (STATIC FILES)

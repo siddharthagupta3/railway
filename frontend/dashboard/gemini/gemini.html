@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Gemini Ultra UI</title>
+<title>Railway Assistant</title>
 <link rel="stylesheet" href="gemini.css">
 <!-- 🔒 AUTH GUARD -->
 <script src="../../config.js"></script>
@@ -15,29 +15,31 @@
 <!-- ================= HEADER ================= -->
 <header class="header">
   <div class="header-left">
-    <button class="menu-btn">☰</button>
-    <h2 class="logo">Gemini</h2>
+    <button class="menu-btn" type="button" aria-label="Toggle menu">☰</button>
+    <h2 class="logo">Operations Assistant</h2>
   </div>
 
   <div class="header-center">
-    <span class="title">AI Assistant</span>
+    <span class="title">Operations Copilot</span>
   </div>
 
   <div class="header-right">
-    <button class="icon-btn">🗑️</button>
-    <div class="profile">U</div>
+    <button class="icon-btn" id="clearChatBtn" type="button" aria-label="Clear chat">Clear</button>
+    <div class="profile" aria-label="User">U</div>
   </div>
 </header>
 
 <!-- ================= SIDEBAR ================= -->
 <aside class="sidebar">
 
-  <div class="sidebar-top">    <div class="sidebar-header">
+  <div class="sidebar-top">
+    <div class="sidebar-header">
       <h3>Chats</h3>
       <button class="sidebar-close-btn" title="Close sidebar">✕</button>
-    </div>    <div class="new-chat-wrapper">
-      <button class="new-chat">+ New Chat</button>
-      <button class="clear-all-btn" title="Clear all chats">×</button>
+    </div>
+    <div class="new-chat-wrapper">
+      <button class="new-chat" type="button">+ New Chat</button>
+      <button class="clear-all-btn" type="button" title="Clear all chats">x</button>
     </div>
   </div>
 
@@ -45,7 +47,7 @@
   </div>
 
   <div class="sidebar-bottom">
-    <button class="sidebar-settings-btn" title="Settings">⚙️ Settings</button>
+    <button class="sidebar-settings-btn" title="Settings" type="button">Settings</button>
   </div>
 
 </aside>
@@ -55,35 +57,40 @@
 
   <!-- HERO -->
   <section class="hero">
-    <h1>Hi User, <span>Create</span></h1>
-    <p>Welcome! Ask anything to Gemini.</p>
+    <h1>Hi User, <span>Plan</span></h1>
+    <p>Ask about assets, inspections, or route status. Replies are instant.</p>
+    <div class="quick-prompts" aria-label="Quick prompts">
+      <button class="prompt-chip" type="button" data-prompt="Show active assets in Zone A">Active assets in Zone A</button>
+      <button class="prompt-chip" type="button" data-prompt="Create an inspection checklist for Track 14B">Inspection checklist</button>
+      <button class="prompt-chip" type="button" data-prompt="Summarize damaged assets and next steps">Damaged assets summary</button>
+      <button class="prompt-chip" type="button" data-prompt="Draft a maintenance report for this week">Maintenance report</button>
+    </div>
   </section>
 
   <!-- CHAT AREA -->
-  <section class="chat-container" id="chat">
-
-    <div class="message bot">
-      <div class="msg-content">
-        Hello 👋 I am Gemini AI. How can I help you?
-      </div>
+  <section class="chat-shell">
+    <div class="chat-toolbar">
+      <div class="status-dot"></div>
+      <span class="toolbar-title">Railway Assistant</span>
+      <span class="toolbar-meta">Local Knowledge Mode</span>
     </div>
-
+    <div class="chat-container" id="chat" aria-live="polite"></div>
   </section>
 
 </main>
 
 <!-- ================= INPUT ================= -->
 <div class="chat-input">
-
-  <button class="attach">+</button>
-  <input type="file" id="imageInput" accept="image/*" style="display: none;">
-
-  <input type="text" id="input" placeholder="Ask Gemini...">
-
-  <button class="mic">🎤</button>
-
-  <button class="send-btn" onclick="sendMessage()">➤</button>
-
+  <div class="input-row">
+    <button class="attach" type="button" aria-label="Attach">+</button>
+    <input type="file" id="imageInput" accept="image/*" style="display: none;">
+    <input type="text" id="input" placeholder="Ask Railway Operations Assistant...">
+    <button class="mic" type="button" aria-label="Voice">Mic</button>
+    <button class="send-btn" type="button" onclick="sendMessage()">Send</button>
+  </div>
+  <div class="input-hints">
+    <span>Tip: include zone, track section, or asset ID for precise answers.</span>
+  </div>
 </div>
 
 <script src="gemini.js"></script>

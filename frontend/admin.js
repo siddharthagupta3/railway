@@ -47,7 +47,7 @@ const replies = {
   thanks: 'Welcome! 😊',
   bye: 'Bye! 👋 Good luck with operations!',
   'what is railway': 'Railway management system for asset tracking.',
-  'your name': "I'm Railway AI Assistant 🤖",
+  'your name': "I'm Railway Operations Assistant 🤖",
   'who made you': 'Developed by Siddhartha Gupta 👨‍💻',
   'how to start': 'Dashboard se start karein.',
   features: 'Analytics, Reports, Tracking - sab available hai.',
@@ -264,7 +264,7 @@ function toggleChat() {
 
   box.style.display = box.style.display === 'flex' ? 'none' : 'flex';
   if (box.style.display === 'flex' && !localStorage.getItem('greeted')) {
-    addBotMessage('Hello 👋 Welcome to Railway AI Assistant!');
+    addBotMessage('Hello 👋 Welcome to Railway Operations Assistant!');
     localStorage.setItem('greeted', 'yes');
   }
 }

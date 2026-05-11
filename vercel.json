@@ -6,6 +6,8 @@
   ],
   "routes": [
     { "src": "/api/(.*)", "dest": "backend/api/index.js" },
+    { "src": "/signup/(.*)", "dest": "frontend/signup/$1" },
+    { "src": "/dashboard/(.*)", "dest": "frontend/dashboard/$1" },
     { "src": "/(.*)", "dest": "frontend/$1" }
   ]
 }

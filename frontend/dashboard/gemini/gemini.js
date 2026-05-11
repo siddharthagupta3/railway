@@ -46,14 +46,25 @@ if(SpeechRecognition){
 }
 
 // ================= CHAT STORAGE =================
-let chats = JSON.parse(localStorage.getItem("geminiChats")) || [];
-let currentChatId = localStorage.getItem("currentChatId") || null;
+const CHAT_STORAGE_KEY = "railwayOpsAssistantChats";
+const CHAT_ID_KEY = "railwayOpsAssistantChatId";
+let chats = JSON.parse(localStorage.getItem(CHAT_STORAGE_KEY)) || [];
+let currentChatId = localStorage.getItem(CHAT_ID_KEY) || null;
+
+const preloadMessages = [
+  "Welcome to Railway Operations Assistant. I can help with assets, inspections, and reports.",
+  "Try: 'Show damaged assets by zone' or 'Create an inspection checklist'.",
+  "Add asset IDs or track sections for precise answers."
+];
 
 // ================= INITIALIZE =================
 function initializeApp(){
   displayChatHistory();
   if(!currentChatId && chats.length > 0){
     loadChat(chats[chats.length - 1].id);
+  }
+  if(!currentChatId && chats.length === 0){
+    createNewChat({ seedMessages: preloadMessages });
   }
   setupEventListeners();
 }
@@ -97,9 +108,9 @@ function setupEventListeners(){
     clearAllBtn.addEventListener("click", ()=>{
       if(confirm("Delete all chats? This cannot be undone.")){
         chats = [];
-        localStorage.setItem("geminiChats", JSON.stringify(chats));
+        localStorage.setItem(CHAT_STORAGE_KEY, JSON.stringify(chats));
         currentChatId = null;
-        localStorage.setItem("currentChatId", currentChatId);
+        localStorage.setItem(CHAT_ID_KEY, currentChatId);
         displayChatHistory();
         clearChatUI();
       }
@@ -107,15 +118,15 @@ function setupEventListeners(){
   }
 
   // Delete button (trash icon) - first icon-btn
-  const deleteBtn = document.querySelectorAll(".icon-btn")[0];
+  const deleteBtn = document.getElementById("clearChatBtn");
   if(deleteBtn){
     deleteBtn.addEventListener("click", ()=>{
-      if(confirm("Are you sure you want to delete this chat?")){
-        chats = chats.filter(c => c.id !== currentChatId);
-        localStorage.setItem("geminiChats", JSON.stringify(chats));
-        currentChatId = chats.length > 0 ? chats[chats.length - 1].id : null;
-        localStorage.setItem("currentChatId", currentChatId);
-        displayChatHistory();
+      if(confirm("Clear current chat?")){
+        const currentChat = chats.find(c => c.id === currentChatId);
+        if(currentChat){
+          currentChat.messages = [];
+          localStorage.setItem(CHAT_STORAGE_KEY, JSON.stringify(chats));
+        }
         clearChatUI();
       }
     });
@@ -125,7 +136,7 @@ function setupEventListeners(){
   const settingsBtn = document.querySelector(".sidebar-settings-btn");
   if(settingsBtn){
     settingsBtn.addEventListener("click", ()=>{
-      window.location.href = "../settings/settings.html";
+      window.location.href = "../setting/setting.html";
     });
   }
 
@@ -133,9 +144,20 @@ function setupEventListeners(){
   const profileBtn = document.querySelector(".profile");
   if(profileBtn){
     profileBtn.addEventListener("click", ()=>{
-      window.location.href = "../profile/profile.html";
+      input.focus();
     });
   }
+
+  // Quick prompt chips
+  document.querySelectorAll(".prompt-chip").forEach((chip) => {
+    chip.addEventListener("click", () => {
+      const prompt = chip.dataset.prompt || chip.textContent || "";
+      if(prompt){
+        input.value = prompt;
+        sendMessage();
+      }
+    });
+  });
 
   // Attach button - open file input
   if(attachBtn && imageInput){
@@ -182,113 +204,117 @@ function setupEventListeners(){
   });
 }
 
+function formatTime(date = new Date()){
+  const hours = date.getHours().toString().padStart(2, "0");
+  const minutes = date.getMinutes().toString().padStart(2, "0");
+  return `${hours}:${minutes}`;
+}
+
+function addMessageToUI(role, text, meta = {}){
+  const msgDiv = document.createElement("div");
+  msgDiv.className = `message ${role}`;
+
+  const msgContent = document.createElement("div");
+  msgContent.className = "msg-content";
+
+  if(meta.image){
+    const img = document.createElement("img");
+    img.src = meta.image;
+    img.title = meta.imageTitle || "attachment";
+    msgContent.appendChild(img);
+  } else {
+    msgContent.textContent = text;
+  }
+
+  const metaLine = document.createElement("div");
+  metaLine.className = "msg-meta";
+  metaLine.textContent = meta.time || formatTime();
+
+  msgDiv.appendChild(msgContent);
+  msgDiv.appendChild(metaLine);
+  chat.appendChild(msgDiv);
+}
+
+function addMessageToStore(role, text, meta = {}){
+  const currentChat = chats.find(c => c.id === currentChatId);
+  if(!currentChat) return;
+  currentChat.messages.push({ role, text, image: meta.image || null, time: meta.time || formatTime() });
+  localStorage.setItem(CHAT_STORAGE_KEY, JSON.stringify(chats));
+}
+
+function generateReply(prompt){
+  const text = prompt.toLowerCase();
+  const intents = [
+    { keys: ["hello", "hi", "hey"], reply: "Hello. How can I assist with railway operations today?" },
+    { keys: ["asset", "assets"], reply: "I can list assets by zone, status, or type. Share a zone or asset ID." },
+    { keys: ["inspection", "checklist"], reply: "Inspection checklist: verify QR, check torque, record wear, log date and inspector." },
+    { keys: ["damaged", "issue"], reply: "For damaged assets: isolate section, log severity, schedule replacement, notify maintenance." },
+    { keys: ["qr", "scan"], reply: "To scan: open the asset scanner, align QR, confirm asset ID, then log inspection." },
+    { keys: ["report", "export"], reply: "I can draft a maintenance report summary. Provide dates and zones to include." },
+    { keys: ["status", "delay"], reply: "Status checks: review active assets, pending inspections, and alerts for each corridor." },
+    { keys: ["safety"], reply: "Safety reminder: flag worn components, track replacement history, and keep inspection cadence." },
+  ];
+
+  const match = intents.find(intent => intent.keys.some(k => text.includes(k)));
+  if(match) return match.reply;
+
+  return "Noted. Share more details (zone, track section, or asset ID) for a precise answer.";
+}
+
 // ================= SEND MESSAGE =================
 function sendMessage(){
-  let text = input.value.trim();
+  const text = input.value.trim();
   if(text === "") return;
 
   if(!currentChatId){
-    createNewChat();
+    createNewChat({ seedMessages: preloadMessages });
   }
 
-  const userMsg = document.createElement("div");
-  userMsg.className = "message user";
-
-  const userContent = document.createElement("div");
-  userContent.className = "msg-content";
-  userContent.innerText = text;
-
-  userMsg.appendChild(userContent);
-  chat.appendChild(userMsg);
-
+  addMessageToUI("user", text);
+  addMessageToStore("user", text);
   input.value = "";
   scrollBottom();
-
-  let currentChat = chats.find(c => c.id === currentChatId);
-  if(currentChat){
-    currentChat.messages.push({ role: "user", text: text });
-  }
-
-  botTyping();
+  botTyping(text);
 }
 
 // ================= UPLOAD IMAGE =================
 function uploadImage(imageData, fileName){
   if(!currentChatId){
-    createNewChat();
+    createNewChat({ seedMessages: preloadMessages });
   }
 
-  const userMsg = document.createElement("div");
-  userMsg.className = "message user";
-
-  const userContent = document.createElement("div");
-  userContent.className = "msg-content";
-  
-  const img = document.createElement("img");
-  img.src = imageData;
-  img.style.maxWidth = "200px";
-  img.style.borderRadius = "10px";
-  img.style.marginTop = "5px";
-  img.title = fileName;
-
-  userContent.appendChild(img);
-  userMsg.appendChild(userContent);
-  chat.appendChild(userMsg);
-
+  addMessageToUI("user", "", { image: imageData, imageTitle: fileName });
+  addMessageToStore("user", `Image: ${fileName}`, { image: imageData });
   scrollBottom();
 
-  let currentChat = chats.find(c => c.id === currentChatId);
-  if(currentChat){
-    currentChat.messages.push({ role: "user", text: "📷 Image: " + fileName, image: imageData });
-  }
-
-  botTyping();
+  const reply = "Image received. Share the asset ID so I can log inspection notes.";
+  botTyping(reply, true);
 }
 
 // ================= BOT TYPING (REAL API) =================
-async function botTyping(){
+function botTyping(prompt, directReply = false){
   const botMsg = document.createElement("div");
   botMsg.className = "message bot";
 
   const botContent = document.createElement("div");
   botContent.className = "msg-content";
-  botContent.innerHTML = "<span class='dots'>. . .</span>";
+  botContent.textContent = "...";
+
+  const metaLine = document.createElement("div");
+  metaLine.className = "msg-meta";
+  metaLine.textContent = formatTime();
 
   botMsg.appendChild(botContent);
+  botMsg.appendChild(metaLine);
   chat.appendChild(botMsg);
 
   scrollBottom();
 
-  try {
-    let currentChat = chats.find(c => c.id === currentChatId);
-    if (!currentChat) return;
-
-    // Get last message as prompt
-    const prompt = currentChat.messages[currentChat.messages.length - 1].text;
-    // History (excluding the very last message we just sent as prompt)
-    const history = currentChat.messages.slice(0, -1);
-
-    const res = await window.apiRequest('/gemini/chat', {
-      method: 'POST',
-      body: JSON.stringify({ prompt, history })
-    });
-
-    const data = await res.json();
-
-    if (!res.ok || !data.success) {
-      throw new Error(data.message || 'AI error');
-    }
-
-    const reply = data.text;
+  const reply = directReply ? prompt : generateReply(prompt);
+  setTimeout(() => {
     typeEffect(botContent, reply);
-    
-    currentChat.messages.push({ role: "bot", text: reply });
-    localStorage.setItem("geminiChats", JSON.stringify(chats));
-
-  } catch (error) {
-    botContent.innerHTML = "<span style='color: #ef4444;'>❌ Error: " + error.message + "</span>";
-    console.error('Gemini API Error:', error);
-  }
+    addMessageToStore("bot", reply);
+  }, 550);
 }
 
 // ================= TYPE EFFECT =================
@@ -313,7 +339,7 @@ function scrollBottom(){
 }
 
 // ================= CREATE NEW CHAT =================
-function createNewChat(){
+function createNewChat(options = {}){
   const chatId = "chat_" + Date.now();
   const chatNumber = chats.length + 1;
   const newChat = {
@@ -324,21 +350,28 @@ function createNewChat(){
   };
   
   chats.push(newChat);
-  localStorage.setItem("geminiChats", JSON.stringify(chats));
+  localStorage.setItem(CHAT_STORAGE_KEY, JSON.stringify(chats));
   currentChatId = chatId;
-  localStorage.setItem("currentChatId", currentChatId);
+  localStorage.setItem(CHAT_ID_KEY, currentChatId);
   
   displayChatHistory();
   clearChatUI();
   if(sidebar){
     sidebar.classList.remove("active");
   }
+
+  if(Array.isArray(options.seedMessages)){
+    options.seedMessages.forEach((text) => {
+      addMessageToUI("bot", text);
+      addMessageToStore("bot", text);
+    });
+  }
 }
 
 // ================= LOAD CHAT =================
 function loadChat(chatId){
   currentChatId = chatId;
-  localStorage.setItem("currentChatId", currentChatId);
+  localStorage.setItem(CHAT_ID_KEY, currentChatId);
   displayChatHistory();
   renderChatMessages();
 }
@@ -361,11 +394,11 @@ function deleteChat(chatId, event){
   event.stopPropagation();
   if(confirm("Delete this chat?")){
     chats = chats.filter(c => c.id !== chatId);
-    localStorage.setItem("geminiChats", JSON.stringify(chats));
+    localStorage.setItem(CHAT_STORAGE_KEY, JSON.stringify(chats));
     
     if(currentChatId === chatId){
       currentChatId = chats.length > 0 ? chats[chats.length - 1].id : null;
-      localStorage.setItem("currentChatId", currentChatId);
+      localStorage.setItem(CHAT_ID_KEY, currentChatId);
     }
     
     displayChatHistory();
@@ -383,25 +416,7 @@ function renderChatMessages(){
   let currentChat = chats.find(c => c.id === currentChatId);
   if(currentChat && currentChat.messages.length > 0){
     currentChat.messages.forEach(msg => {
-      const msgDiv = document.createElement("div");
-      msgDiv.className = "message " + msg.role;
-      
-      const msgContent = document.createElement("div");
-      msgContent.className = "msg-content";
-      
-      if(msg.image){
-        const img = document.createElement("img");
-        img.src = msg.image;
-        img.style.maxWidth = "200px";
-        img.style.borderRadius = "10px";
-        img.title = msg.text;
-        msgContent.appendChild(img);
-      } else {
-        msgContent.innerText = msg.text;
-      }
-      
-      msgDiv.appendChild(msgContent);
-      chat.appendChild(msgDiv);
+      addMessageToUI(msg.role, msg.text, { image: msg.image || null, time: msg.time });
     });
     scrollBottom();
   }
@@ -409,7 +424,7 @@ function renderChatMessages(){
 
 // ================= CLEAR CHAT UI =================
 function clearChatUI(){
-  chat.innerHTML = '<div class="message bot"><div class="msg-content">Hello ?? I am Gemini AI. How can I help you?</div></div>';
+  chat.innerHTML = '';
 }
 
 // ================= DISPLAY CHAT HISTORY =================
@@ -432,7 +447,7 @@ function displayChatHistory(){
     // Delete button (X) - directly visible on right side
     const deleteBtn = document.createElement("button");
     deleteBtn.className = "chat-item-delete-btn";
-    deleteBtn.innerText = "✕";
+    deleteBtn.innerText = "x";
     deleteBtn.title = "Delete chat";
     deleteBtn.addEventListener("click", (e) => deleteChat(c.id, e));
     
