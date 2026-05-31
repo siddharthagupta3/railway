@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Signup - Railway Management System</title>
+    <link rel="stylesheet" href="signup.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- Animated Background -->
+    <div class="bg-animation">
+        <div class="floating-orb orb1"></div>
+        <div class="floating-orb orb2"></div>
+        <div class="floating-orb orb3"></div>
+    </div>
+
+    <!-- Main Layout -->
+    <div class="main-container">
+        <!-- Left Panel - Login -->
+        <div class="panel login-panel" id="loginPanel" style="display: flex;">
+            <div class="panel-content">
+                <div class="logo">
+                    <i class="fas fa-wallet"></i>
+                    <h2>Railway</h2>
+                </div>
+                
+                <h3>Welcome Back!</h3>
+                <p>Login to access your account</p>
+                <p class="demo-note">Demo login: use any Gmail and any password to sign in.</p>
+                
+                <form class="auth-form" id="loginForm">
+                    <div class="form-group">
+                        <div class="input-group">
+                            <i class="fas fa-envelope"></i>
+                            <input type="email" id="loginEmail" placeholder="Email Address" required>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <div class="input-group">
+                            <i class="fas fa-lock"></i>
+                            <input type="password" id="loginPassword" placeholder="Password" required>
+                        </div>
+                    </div>
+                    
+                    <div class="form-options">
+                        <label class="checkbox">
+                            <input type="checkbox" id="rememberMe">
+                            <span class="checkmark"></span>
+                            Remember me
+                        </label>
+                        <a class="forgot-link" href="forgot-password.html">Forgot password?</a>
+                    </div>
+                    
+                    <button type="submit" class="auth-btn">
+                        <span>Login</span>
+                        <i class="fas fa-arrow-right"></i>
+                    </button>
+                    
+                    <div class="divider">
+                        <span>or continue with</span>
+                    </div>
+                    
+                    <div class="social-login">
+                        <button type="button" class="social-btn google">
+                            <i class="fab fa-google"></i>
+                        </button>
+                        <button type="button" class="social-btn facebook">
+                            <i class="fab fa-facebook-f"></i>
+                        </button>
+                        <button type="button" class="social-btn github">
+                            <i class="fab fa-github"></i>
+                        </button>
+                    </div>
+                </form>
+                
+                <div class="panel-footer">
+                    <p>Don't have an account? <a href="#" id="showRegister">Register</a></p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Panel - Register -->
+        <div class="panel register-panel" id="registerPanel" style="display: none;">
+            <div class="panel-content">
+                <div class="logo">
+                    <i class="fas fa-wallet"></i>
+                    <h2>Railway</h2>
+                </div>
+                
+                <h3>Create Account</h3>
+                <p>Join our learning community</p>
+                
+                <form class="auth-form" id="registerForm">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <div class="input-group">
+                                <i class="fas fa-user"></i>
+                                <input type="text" id="firstName" placeholder="First Name" required>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="input-group">
+                                <i class="fas fa-user"></i>
+                                <input type="text" id="lastName" placeholder="Last Name" required>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <div class="input-group">
+                            <i class="fas fa-envelope"></i>
+                            <input type="email" id="registerEmail" placeholder="Email Address" required>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <div class="input-group">
+                            <i class="fas fa-phone"></i>
+                            <input type="tel" id="phone" placeholder="Phone Number" required>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <div class="input-group">
+                            <i class="fas fa-lock"></i>
+                            <input type="password" id="registerPassword" placeholder="Password" required>
+                            <button type="button" class="toggle-password" data-toggle-target="registerPassword">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <div class="input-group">
+                            <i class="fas fa-lock"></i>
+                            <input type="password" id="confirmPassword" placeholder="Confirm Password" required>
+                            <button type="button" class="toggle-password" data-toggle-target="confirmPassword">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="password-strength" id="passwordStrength">
+                        <div class="strength-bar">
+                            <div class="strength-fill"></div>
+                        </div>
+                        <span class="strength-text">Password strength</span>
+                    </div>
+                    
+                    <div class="form-options">
+                        <label class="checkbox">
+                            <input type="checkbox" id="agreeTerms" required>
+                            <span class="checkmark"></span>
+                            I agree to the <a href="#">Terms & Conditions</a>
+                        </label>
+                    </div>
+                    
+                    <button type="submit" class="auth-btn">
+                        <span>Create Account</span>
+                        <i class="fas fa-user-plus"></i>
+                    </button>
+                    
+                    <div class="divider">
+                        <span>or sign up with</span>
+                    </div>
+                    
+                    <div class="social-login">
+                        <button type="button" class="social-btn google">
+                            <i class="fab fa-google"></i>
+                        </button>
+                        <button type="button" class="social-btn facebook">
+                            <i class="fab fa-facebook-f"></i>
+                        </button>
+                        <button type="button" class="social-btn github">
+                            <i class="fab fa-github"></i>
+                        </button>
+                    </div>
+                </form>
+                
+                <div class="panel-footer">
+                    <p>Already have an account? <a href="#" id="showLogin">Login</a></p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Panel - OTP Verification (Hidden initially) -->
+        <div class="panel otp-panel" id="otpPanel" style="display: none;">
+            <div class="panel-content">
+                <div class="logo">
+                    <i class="fas fa-shield-alt"></i>
+                    <h2>Verification</h2>
+                </div>
+                
+                <h3>Verify Your Email</h3>
+                <p>We've sent a 6-digit code to <br><strong id="otpEmailDisplay" style="color: #4ade80;">your email</strong></p>
+                
+                <form class="auth-form" id="otpForm">
+                    <div class="form-group" style="text-align: center; margin: 30px 0;">
+                        <div class="otp-inputs" style="display: flex; gap: 10px; justify-content: center;">
+                            <input type="text" class="otp-digit" maxlength="1" style="width: 45px; height: 50px; text-align: center; font-size: 24px; font-weight: bold; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); background: rgba(0,0,0,0.2); color: white;" required>
+                            <input type="text" class="otp-digit" maxlength="1" style="width: 45px; height: 50px; text-align: center; font-size: 24px; font-weight: bold; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); background: rgba(0,0,0,0.2); color: white;" required>
+                            <input type="text" class="otp-digit" maxlength="1" style="width: 45px; height: 50px; text-align: center; font-size: 24px; font-weight: bold; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); background: rgba(0,0,0,0.2); color: white;" required>
+                            <input type="text" class="otp-digit" maxlength="1" style="width: 45px; height: 50px; text-align: center; font-size: 24px; font-weight: bold; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); background: rgba(0,0,0,0.2); color: white;" required>
+                            <input type="text" class="otp-digit" maxlength="1" style="width: 45px; height: 50px; text-align: center; font-size: 24px; font-weight: bold; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); background: rgba(0,0,0,0.2); color: white;" required>
+                            <input type="text" class="otp-digit" maxlength="1" style="width: 45px; height: 50px; text-align: center; font-size: 24px; font-weight: bold; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); background: rgba(0,0,0,0.2); color: white;" required>
+                        </div>
+                    </div>
+                    
+                    <button type="submit" class="auth-btn">
+                        <span>Verify & Proceed</span>
+                        <i class="fas fa-check"></i>
+                    </button>
+                    
+                </form>
+                
+                <div class="panel-footer" style="margin-top: 20px;">
+                    <p>Didn't receive the code? <br><a href="#" id="resendOtpBtn">Resend Code</a></p>
+                    <p style="margin-top: 15px;"><a href="#" id="backToRegisterBtn" style="color: #9ca3af;"><i class="fas fa-arrow-left"></i> Back to Register</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Feedback Overlay -->
+    <div class="success-message" id="successMessage">
+        <div class="success-content">
+            <i class="fas fa-check-circle"></i>
+            <h3>Success!</h3>
+            <p id="successText">Operation completed successfully</p>
+            <button class="success-btn" id="closeSuccessBtn" type="button">OK</button>
+        </div>
+    </div>
+
+    <!-- Page Logic -->
+    
+    <script src="signup.js"></script>
+</body>
+</html>
